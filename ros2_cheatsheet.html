@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROS 2 — Complete Developer Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root{--bg:#09111f;--bg2:#0c1624;--surf:#0f1d33;--surf2:#132338;--bdr:#1a3050;--bdr2:#1e3a5f;--cyan:#22d3ee;--green:#4ade80;--blue:#60a5fa;--purple:#a78bfa;--pink:#f472b6;--orange:#fb923c;--yellow:#fbbf24;--teal:#2dd4bf;--lime:#a3e635;--red:#f87171;--violet:#c084fc;--amber:#f59e0b;--slate:#94a3b8;--tx:#e2f0ff;--tx2:#8fabc7;--tx3:#4d6a8a;--code:#060d1a;--sw:270px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.7;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+a{color:var(--cyan);text-decoration:none}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--bg2);border-right:1px solid var(--bdr);overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-head{padding:18px 14px 14px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--cyan),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:700;letter-spacing:-0.3px;color:var(--tx)}
+.logo-sub{font-size:9.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.search{position:relative}
+.search input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:8px;padding:7px 10px 7px 30px;color:var(--tx);font-family:'Inter',sans-serif;font-size:12px;outline:none;transition:border-color .15s}
+.search input::placeholder{color:var(--tx3)}
+.search input:focus{border-color:var(--cyan)}
+.search-ic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px}
+.nav{padding:6px 0;flex:1}
+.nav-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);padding:12px 14px 3px}
+.nav-a{display:flex;align-items:center;gap:9px;padding:6px 14px;color:var(--tx2);text-decoration:none;font-size:12px;font-weight:500;border-left:2px solid transparent;transition:all .12s;white-space:nowrap;overflow:hidden}
+.nav-a:hover{color:var(--tx);background:rgba(255,255,255,.03)}
+.nav-a.active{color:var(--tx);background:rgba(34,211,238,.06);border-left-color:var(--cyan)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* MAIN */
+main{margin-left:var(--sw);padding:36px 36px 80px;max-width:1020px}
+
+/* PAGE HEADER */
+.ph{margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--bdr)}
+.ph h1{font-size:32px;font-weight:800;letter-spacing:-1px;background:linear-gradient(120deg,var(--cyan),var(--blue) 50%,var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.ph p{color:var(--tx2);font-size:14px}
+.badges{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+
+/* SECTIONS */
+section{margin-bottom:60px;scroll-margin-top:20px}
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
+.sec-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sec-title{font-size:20px;font-weight:700;letter-spacing:-0.4px}
+.sec-tag{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px;border:1px solid;margin-left:auto}
+
+/* SUBSECTIONS */
+.sub{margin-bottom:28px}
+.sub-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+
+/* CODE BLOCKS */
+.cb{background:var(--code);border:1px solid var(--bdr);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.cb-hd{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--surf);border-bottom:1px solid var(--bdr)}
+.cb-dots{display:flex;gap:5px}
+.cb-dot{width:8px;height:8px;border-radius:50%}
+.cb-lang{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3)}
+.cb-right{display:flex;align-items:center;gap:8px}
+.cb-file{font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace}
+.copy-btn{background:none;border:1px solid var(--bdr2);color:var(--tx3);padding:2px 9px;border-radius:4px;font-size:10.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.copy-btn:hover{background:var(--surf2);color:var(--tx)}
+.copy-btn.ok{border-color:var(--green);color:var(--green)}
+.cb pre{padding:14px 16px;overflow-x:auto;margin:0}
+.cb code{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75}
+.hljs{background:transparent!important;padding:0!important}
+
+/* STEP GUIDE */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:14px;top:32px;bottom:0;width:1px;background:var(--bdr)}
+.step-n{width:29px;height:29px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex-shrink:0;position:relative;z-index:1}
+.step-body{flex:1;padding-bottom:22px}
+.step-title{font-size:12.5px;font-weight:700;margin-bottom:8px;padding-top:5px}
+
+/* BOXES */
+.box{padding:12px 14px;border-radius:8px;margin-bottom:14px;border-left:3px solid;font-size:12.5px}
+.box-lbl{font-weight:700;margin-bottom:3px;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px}
+.tip{background:rgba(34,211,238,.05);border-color:var(--cyan)}.tip .box-lbl{color:var(--cyan)}
+.warn{background:rgba(251,191,36,.06);border-color:var(--yellow)}.warn .box-lbl{color:var(--yellow)}
+.info{background:rgba(96,165,250,.06);border-color:var(--blue)}.info .box-lbl{color:var(--blue)}
+.ok{background:rgba(74,222,128,.05);border-color:var(--green)}.ok .box-lbl{color:var(--green)}
+
+/* TABLES */
+.tw{overflow-x:auto;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--surf2);color:var(--tx3);font-weight:600;text-transform:uppercase;font-size:9.5px;letter-spacing:.8px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--bdr)}
+td{padding:8px 12px;border-bottom:1px solid var(--bdr);vertical-align:top;line-height:1.5}
+tr:hover td{background:rgba(255,255,255,.015)}
+code.il{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surf2);border:1px solid var(--bdr);padding:1px 5px;border-radius:3px;color:var(--cyan)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* TABS */
+.tabs-wrap{border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.tab-btns{display:flex;background:var(--surf);border-bottom:1px solid var(--bdr)}
+.tab-btn{padding:8px 16px;background:none;border:none;color:var(--tx3);font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;margin-bottom:-1px}
+.tab-btn.on{color:var(--tx);border-bottom-color:var(--cyan)}
+.tab-btn:hover:not(.on){color:var(--tx2)}
+.tab-pane{display:none}
+.tab-pane.on{display:block}
+.tab-pane .cb{border:none;border-radius:0;margin-bottom:0}
+
+/* CARDS */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:14px}
+.card-title{font-size:12px;font-weight:700;color:var(--tx);margin-bottom:8px}
+.card-body{font-size:12px;color:var(--tx2);line-height:1.6}
+
+/* FILE TREE */
+.ftree{background:var(--code);border:1px solid var(--bdr);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;margin-bottom:14px}
+.ft-dir{color:var(--blue)}.ft-file{color:var(--tx3)}.ft-hl{color:var(--green);font-weight:600}
+
+/* SCROLL TOP */
+.stop{position:fixed;bottom:22px;right:22px;width:38px;height:38px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);font-size:16px;transition:all .15s;opacity:0;pointer-events:none}
+.stop.vis{opacity:1;pointer-events:all}
+.stop:hover{background:var(--cyan);color:#000;border-color:var(--cyan)}
+
+/* INLINE CODE */
+ic{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surf2);border:1px solid var(--bdr);padding:1px 5px;border-radius:3px;color:var(--cyan)}
+
+/* SEPARATOR */
+hr{border:none;border-top:1px solid var(--bdr);margin:20px 0}
+
+/* NOTE ROW */
+.note-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:5px;font-size:12px;color:var(--tx2)}
+.note-row::before{content:'→';color:var(--cyan);flex-shrink:0;margin-top:1px}
+
+/* PARAM TABLE */
+.ptag{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:3px;font-family:'JetBrains Mono',monospace}
+
+/* QUICK REF CHIP */
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--surf2);border:1px solid var(--bdr);border-radius:6px;padding:3px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2);margin:2px}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-head">
+    <div class="logo">
+      <div class="logo-icon">🤖</div>
+      <div><div class="logo-name">ROS 2</div><div class="logo-sub">Complete Cheatsheet</div></div>
+    </div>
+    <div class="search">
+      <span class="search-ic">⌕</span>
+      <input type="text" id="srch" placeholder="Search sections..." oninput="filterNav(this.value)">
+    </div>
+  </div>
+  <nav class="nav" id="nav">
+    <div class="nav-lbl">Fundamentals</div>
+    <a href="#setup" class="nav-a"><span class="nav-dot" style="background:var(--cyan)"></span>Setup &amp; Workspace</a>
+    <a href="#nodes" class="nav-a"><span class="nav-dot" style="background:var(--green)"></span>Custom Nodes</a>
+    <a href="#topics" class="nav-a"><span class="nav-dot" style="background:var(--blue)"></span>Topics — Pub / Sub</a>
+    <a href="#services" class="nav-a"><span class="nav-dot" style="background:var(--purple)"></span>Services</a>
+    <a href="#actions" class="nav-a"><span class="nav-dot" style="background:var(--pink)"></span>Actions</a>
+    <div class="nav-lbl">Interfaces &amp; Config</div>
+    <a href="#interfaces" class="nav-a"><span class="nav-dot" style="background:var(--orange)"></span>Custom Interfaces ★</a>
+    <a href="#params" class="nav-a"><span class="nav-dot" style="background:var(--yellow)"></span>Parameters</a>
+    <a href="#launch" class="nav-a"><span class="nav-dot" style="background:var(--teal)"></span>Launch Files</a>
+    <div class="nav-lbl">Advanced</div>
+    <a href="#tf2" class="nav-a"><span class="nav-dot" style="background:var(--lime)"></span>TF2 Transforms</a>
+    <a href="#executors" class="nav-a"><span class="nav-dot" style="background:var(--red)"></span>Executors &amp; Callbacks</a>
+    <a href="#lifecycle" class="nav-a"><span class="nav-dot" style="background:var(--violet)"></span>Lifecycle Nodes</a>
+    <a href="#qos" class="nav-a"><span class="nav-dot" style="background:var(--slate)"></span>QoS &amp; Bag Files</a>
+    <div class="nav-lbl">Reference</div>
+    <a href="#cli" class="nav-a"><span class="nav-dot" style="background:var(--cyan)"></span>CLI Commands</a>
+    <a href="#debug" class="nav-a"><span class="nav-dot" style="background:var(--amber)"></span>Debugging &amp; Tools</a>
+  </nav>
+</aside>
+
+<div class="stop" id="stpBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<main>
+<div class="ph">
+  <h1>ROS 2 Complete Developer Cheatsheet</h1>
+  <p>From first node to advanced robotics systems — Python &amp; C++, step-by-step guides, every command you need</p>
+  <div class="badges">
+    <span class="badge" style="color:var(--cyan);border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.06)">ROS 2 Humble / Iron / Jazzy</span>
+    <span class="badge" style="color:var(--green);border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.06)">Python &amp; C++</span>
+    <span class="badge" style="color:var(--purple);border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.06)">Beginner → Advanced</span>
+    <span class="badge" style="color:var(--orange);border-color:rgba(251,146,60,.35);background:rgba(251,146,60,.06)">Step-by-Step Guides</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     1. SETUP & WORKSPACE
+═══════════════════════════════════════════ -->
+<section id="setup">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(34,211,238,.12)">🚀</div>
+  <div class="sec-title" style="color:var(--cyan)">Setup &amp; Workspace</div>
+  <span class="sec-tag" style="color:var(--cyan);border-color:rgba(34,211,238,.35)">Start Here</span>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Source ROS 2 &amp; Environment Setup</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-bash"># Source ROS 2 (add to ~/.bashrc to auto-source)
+source /opt/ros/humble/setup.bash      # Humble
+source /opt/ros/iron/setup.bash        # Iron
+source /opt/ros/jazzy/setup.bash       # Jazzy
+
+# Verify installation
+ros2 --help
+printenv ROS_DISTRO</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Create &amp; Build a Workspace</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Create workspace directory
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws
+
+# Install dependencies for all packages
+rosdep install --from-paths src --ignore-src -r -y
+
+# Build everything
+colcon build
+
+# Build specific package only
+colcon build --packages-select my_package
+
+# Build with symlinks (Python — no rebuild needed after edits)
+colcon build --symlink-install
+
+# Source workspace (run after every build)
+source install/setup.bash
+
+# Add to ~/.bashrc for convenience
+echo "source ~/ros2_ws/install/setup.bash" >> ~/.bashrc</code></pre></div>
+</div>
+
+<div class="g2">
+  <div class="sub">
+    <div class="sub-title">Create Python Package</div>
+    <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-bash">cd ~/ros2_ws/src
+
+ros2 pkg create my_py_pkg \
+  --build-type ament_python \
+  --dependencies rclpy std_msgs</code></pre></div>
+  </div>
+  <div class="sub">
+    <div class="sub-title">Create C++ Package</div>
+    <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-bash">cd ~/ros2_ws/src
+
+ros2 pkg create my_cpp_pkg \
+  --build-type ament_cmake \
+  --dependencies rclcpp std_msgs</code></pre></div>
+  </div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Python Package Structure</div>
+  <div class="ftree">
+<span class="ft-dir">my_py_pkg/</span>
+├── <span class="ft-dir">my_py_pkg/</span>
+│   ├── <span class="ft-hl">__init__.py</span>
+│   └── <span class="ft-hl">my_node.py</span>          ← your node code
+├── <span class="ft-dir">resource/</span>
+│   └── <span class="ft-file">my_py_pkg</span>
+├── <span class="ft-dir">test/</span>
+├── <span class="ft-hl">package.xml</span>              ← dependencies declared here
+├── <span class="ft-hl">setup.py</span>                  ← entry points registered here
+└── <span class="ft-file">setup.cfg</span></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">setup.py — Register Entry Points</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">setup.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from setuptools import setup
+
+package_name = 'my_py_pkg'
+
+setup(
+    name=package_name,
+    version='0.0.1',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+         ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    entry_points={
+        'console_scripts': [
+            # Format: 'executable_name = package.module:function'
+            'my_node = my_py_pkg.my_node:main',
+            'talker   = my_py_pkg.publisher_node:main',
+            'listener = my_py_pkg.subscriber_node:main',
+        ],
+    },
+)</code></pre></div>
+</div>
+
+<div class="box tip"><div class="box-lbl">💡 Tip</div>After editing setup.py, always re-run <code class="il">colcon build --symlink-install</code> so the entry point is registered. With --symlink-install you won't need to rebuild for .py code changes.</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     2. CUSTOM NODES
+═══════════════════════════════════════════ -->
+<section id="nodes">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(74,222,128,.12)">📦</div>
+  <div class="sec-title" style="color:var(--green)">Custom Nodes</div>
+  <span class="sec-tag" style="color:var(--green);border-color:rgba(74,222,128,.35)">Core</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ What is a Node?</div>A node is the fundamental unit of computation in ROS 2. Each node runs as an independent process, communicates via topics/services/actions, and can publish/subscribe to data. Nodes are typically specialized (one node per sensor, one for processing, etc.).</div>
+
+<div class="sub">
+  <div class="sub-title">Minimal Python Node</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">my_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+
+class MyNode(Node):
+    def __init__(self):
+        super().__init__('my_node')          # node name in ROS graph
+        self.get_logger().info('Node started!')
+        self.get_logger().warn('This is a warning')
+        self.get_logger().error('This is an error')
+        self.get_logger().debug('Debug message (hidden by default)')
+
+        # Create a timer (calls callback every 1.0 sec)
+        self.timer = self.create_timer(1.0, self.timer_callback)
+        self.counter = 0
+
+    def timer_callback(self):
+        self.counter += 1
+        self.get_logger().info(f'Count: {self.counter}')
+
+def main(args=None):
+    rclpy.init(args=args)          # initialize rclpy
+    node = MyNode()                # instantiate node
+    rclpy.spin(node)               # block here, process callbacks
+    node.destroy_node()            # cleanup
+    rclpy.shutdown()               # shutdown rclpy
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Minimal C++ Node</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><span class="cb-file">my_node.cpp</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">#include "rclcpp/rclcpp.hpp"
+
+class MyNode : public rclcpp::Node {
+public:
+    MyNode() : Node("my_node") {
+        RCLCPP_INFO(get_logger(), "Node started!");
+        timer_ = create_wall_timer(
+            std::chrono::seconds(1),
+            std::bind(&MyNode::timerCallback, this));
+    }
+
+private:
+    void timerCallback() {
+        RCLCPP_INFO(get_logger(), "Timer fired!");
+    }
+    rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char* argv[]) {
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared&lt;MyNode&gt;());
+    rclcpp::shutdown();
+    return 0;
+}</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">C++ CMakeLists.txt — Compile &amp; Install Node</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cmake</span><div class="cb-right"><span class="cb-file">CMakeLists.txt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cmake">cmake_minimum_required(VERSION 3.8)
+project(my_cpp_pkg)
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+
+# Declare the executable
+add_executable(my_node src/my_node.cpp)
+
+# Link dependencies
+ament_target_dependencies(my_node rclcpp std_msgs)
+
+# Install the binary
+install(TARGETS my_node DESTINATION lib/${PROJECT_NAME})
+
+ament_package()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Running Nodes</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Run a node
+ros2 run &lt;package_name&gt; &lt;executable_name&gt;
+ros2 run my_py_pkg my_node
+ros2 run my_cpp_pkg my_node
+
+# Run with remapping and namespace
+ros2 run my_py_pkg my_node --ros-args -r __node:=new_name -r /topic:=/new_topic
+
+# List running nodes
+ros2 node list
+
+# Inspect a node
+ros2 node info /my_node</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     3. TOPICS
+═══════════════════════════════════════════ -->
+<section id="topics">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(96,165,250,.12)">📡</div>
+  <div class="sec-title" style="color:var(--blue)">Topics — Publisher &amp; Subscriber</div>
+  <span class="sec-tag" style="color:var(--blue);border-color:rgba(96,165,250,.35)">Pub/Sub</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ Topics</div>Topics are named buses over which nodes exchange messages. Publishers send messages; subscribers receive them. Completely decoupled — publisher doesn't know who is listening.</div>
+
+<div class="sub">
+  <div class="sub-title">Publisher + Subscriber in One Node (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">pub_sub_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String, Int32, Float64
+from geometry_msgs.msg import Twist
+
+class PubSubNode(Node):
+    def __init__(self):
+        super().__init__('pub_sub_node')
+
+        # --- PUBLISHER ---
+        # create_publisher(MsgType, topic_name, queue_size)
+        self.pub = self.create_publisher(String, '/chatter', 10)
+
+        # --- SUBSCRIBER ---
+        # create_subscription(MsgType, topic_name, callback, queue_size)
+        self.sub = self.create_subscription(
+            String, '/chatter', self.listener_callback, 10)
+
+        # --- TIMER ---
+        self.timer = self.create_timer(0.5, self.timer_callback)
+        self.count = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'Hello World: {self.count}'
+        self.pub.publish(msg)
+        self.count += 1
+
+    def listener_callback(self, msg: String):
+        self.get_logger().info(f'Received: {msg.data}')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = PubSubNode()
+    rclpy.spin(node)
+    rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Publisher (C++)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><span class="cb-file">talker.cpp</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+
+class Talker : public rclcpp::Node {
+public:
+    Talker() : Node("talker"), count_(0) {
+        pub_ = create_publisher&lt;std_msgs::msg::String&gt;("/chatter", 10);
+        timer_ = create_wall_timer(
+            std::chrono::milliseconds(500),
+            std::bind(&Talker::publish, this));
+    }
+private:
+    void publish() {
+        auto msg = std_msgs::msg::String();
+        msg.data = "Hello: " + std::to_string(count_++);
+        RCLCPP_INFO(get_logger(), "Publishing: %s", msg.data.c_str());
+        pub_->publish(msg);
+    }
+    rclcpp::Publisher&lt;std_msgs::msg::String&gt;::SharedPtr pub_;
+    rclcpp::TimerBase::SharedPtr timer_;
+    int count_;
+};</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Subscriber (C++)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><span class="cb-file">listener.cpp</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+
+class Listener : public rclcpp::Node {
+public:
+    Listener() : Node("listener") {
+        sub_ = create_subscription&lt;std_msgs::msg::String&gt;(
+            "/chatter", 10,
+            [this](const std_msgs::msg::String::SharedPtr msg) {
+                RCLCPP_INFO(get_logger(), "Got: %s", msg->data.c_str());
+            });
+    }
+private:
+    rclcpp::Subscription&lt;std_msgs::msg::String&gt;::SharedPtr sub_;
+};</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Common Message Types</div>
+  <div class="tw"><table>
+    <tr><th>Type</th><th>Import (Python)</th><th>Fields</th></tr>
+    <tr><td><code class="il">std_msgs/String</code></td><td><code class="il">from std_msgs.msg import String</code></td><td><code class="il">msg.data</code> (str)</td></tr>
+    <tr><td><code class="il">std_msgs/Int32</code></td><td><code class="il">from std_msgs.msg import Int32</code></td><td><code class="il">msg.data</code> (int)</td></tr>
+    <tr><td><code class="il">std_msgs/Float64</code></td><td><code class="il">from std_msgs.msg import Float64</code></td><td><code class="il">msg.data</code> (float)</td></tr>
+    <tr><td><code class="il">std_msgs/Bool</code></td><td><code class="il">from std_msgs.msg import Bool</code></td><td><code class="il">msg.data</code> (bool)</td></tr>
+    <tr><td><code class="il">geometry_msgs/Twist</code></td><td><code class="il">from geometry_msgs.msg import Twist</code></td><td><code class="il">msg.linear.x</code>, <code class="il">msg.angular.z</code></td></tr>
+    <tr><td><code class="il">geometry_msgs/Pose</code></td><td><code class="il">from geometry_msgs.msg import Pose</code></td><td><code class="il">msg.position.x/y/z</code>, <code class="il">msg.orientation.x/y/z/w</code></td></tr>
+    <tr><td><code class="il">sensor_msgs/LaserScan</code></td><td><code class="il">from sensor_msgs.msg import LaserScan</code></td><td><code class="il">msg.ranges[]</code>, <code class="il">msg.angle_min</code></td></tr>
+    <tr><td><code class="il">sensor_msgs/Image</code></td><td><code class="il">from sensor_msgs.msg import Image</code></td><td><code class="il">msg.data</code>, <code class="il">msg.width</code>, <code class="il">msg.height</code></td></tr>
+    <tr><td><code class="il">nav_msgs/Odometry</code></td><td><code class="il">from nav_msgs.msg import Odometry</code></td><td><code class="il">msg.pose</code>, <code class="il">msg.twist</code></td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Topic CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">ros2 topic list                              # list all active topics
+ros2 topic list -t                           # list with message types
+ros2 topic echo /chatter                     # print topic messages
+ros2 topic echo /chatter --once              # print just one message
+ros2 topic info /chatter                     # publisher/subscriber count
+ros2 topic hz /chatter                       # measure publish rate
+ros2 topic bw /chatter                       # measure bandwidth
+ros2 topic pub /chatter std_msgs/msg/String "data: 'hello'"  # publish once
+ros2 topic pub -r 10 /chatter std_msgs/msg/String "data: 'hi'"  # at 10Hz</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     4. SERVICES
+═══════════════════════════════════════════ -->
+<section id="services">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(167,139,250,.12)">🔧</div>
+  <div class="sec-title" style="color:var(--purple)">Services</div>
+  <span class="sec-tag" style="color:var(--purple);border-color:rgba(167,139,250,.35)">Request/Response</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ Services</div>Services implement a request/response communication pattern. A client sends a request and waits synchronously for a response. Good for discrete one-time actions (get sensor value, enable motor, etc.).</div>
+
+<div class="sub">
+  <div class="sub-title">Service Server (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">add_server.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts  # built-in example srv
+
+class AddServer(Node):
+    def __init__(self):
+        super().__init__('add_server')
+        # create_service(SrvType, service_name, callback)
+        self.srv = self.create_service(
+            AddTwoInts, 'add_two_ints', self.add_callback)
+        self.get_logger().info('Service ready: add_two_ints')
+
+    def add_callback(self, request, response):
+        # request and response are generated from the .srv file
+        response.sum = request.a + request.b
+        self.get_logger().info(f'{request.a} + {request.b} = {response.sum}')
+        return response  # must return response object
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AddServer()
+    rclpy.spin(node)
+    rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Service Client (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">add_client.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+
+class AddClient(Node):
+    def __init__(self):
+        super().__init__('add_client')
+        # create_client(SrvType, service_name)
+        self.client = self.create_client(AddTwoInts, 'add_two_ints')
+
+    def send_request(self, a, b):
+        # Wait for service to be available
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().warn('Waiting for service...')
+
+        req = AddTwoInts.Request()
+        req.a = a
+        req.b = b
+
+        # Async call — returns a Future
+        future = self.client.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+
+        if future.result() is not None:
+            self.get_logger().info(f'Result: {future.result().sum}')
+            return future.result().sum
+        else:
+            self.get_logger().error('Service call failed!')
+            return None
+
+def main(args=None):
+    rclpy.init(args=args)
+    client = AddClient()
+    result = client.send_request(5, 3)
+    print(f'5 + 3 = {result}')
+    client.destroy_node()
+    rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Service Server &amp; Client (C++)</div>
+  <div class="tabs-wrap">
+    <div class="tab-btns">
+      <button class="tab-btn on" onclick="switchTab(this,'srv-server')">Server</button>
+      <button class="tab-btn" onclick="switchTab(this,'srv-client')">Client</button>
+    </div>
+    <div id="srv-server" class="tab-pane on">
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">#include "rclcpp/rclcpp.hpp"
+#include "example_interfaces/srv/add_two_ints.hpp"
+
+class AddServer : public rclcpp::Node {
+public:
+    AddServer() : Node("add_server") {
+        srv_ = create_service&lt;example_interfaces::srv::AddTwoInts&gt;(
+            "add_two_ints",
+            [this](const example_interfaces::srv::AddTwoInts::Request::SharedPtr req,
+                         example_interfaces::srv::AddTwoInts::Response::SharedPtr res) {
+                res->sum = req->a + req->b;
+                RCLCPP_INFO(get_logger(), "%ld + %ld = %ld", req->a, req->b, res->sum);
+            });
+    }
+private:
+    rclcpp::Service&lt;example_interfaces::srv::AddTwoInts&gt;::SharedPtr srv_;
+};</code></pre></div>
+    </div>
+    <div id="srv-client" class="tab-pane">
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">#include "rclcpp/rclcpp.hpp"
+#include "example_interfaces/srv/add_two_ints.hpp"
+
+int main(int argc, char* argv[]) {
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared&lt;rclcpp::Node&gt;("add_client");
+    auto client = node->create_client&lt;example_interfaces::srv::AddTwoInts&gt;("add_two_ints");
+
+    while (!client->wait_for_service(std::chrono::seconds(1)))
+        RCLCPP_WARN(node->get_logger(), "Waiting for service...");
+
+    auto request = std::make_shared&lt;example_interfaces::srv::AddTwoInts::Request&gt;();
+    request->a = 5; request->b = 3;
+
+    auto future = client->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node, future) == rclcpp::FutureReturnCode::SUCCESS)
+        RCLCPP_INFO(node->get_logger(), "Result: %ld", future.get()->sum);
+
+    rclcpp::shutdown();
+    return 0;
+}</code></pre></div>
+    </div>
+  </div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Service CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">ros2 service list                          # list active services
+ros2 service list -t                       # with types
+ros2 service type /add_two_ints            # get service type
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 5, b: 3}"
+ros2 service find example_interfaces/srv/AddTwoInts  # find services of type</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     5. ACTIONS
+═══════════════════════════════════════════ -->
+<section id="actions">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(244,114,182,.12)">⚡</div>
+  <div class="sec-title" style="color:var(--pink)">Actions</div>
+  <span class="sec-tag" style="color:var(--pink);border-color:rgba(244,114,182,.35)">Long Tasks</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ Actions</div>Actions are for long-running tasks with feedback. They combine a goal (what to do), feedback (progress), and result (final outcome). Can be cancelled mid-execution. Built on top of topics and services.</div>
+
+<div class="sub">
+  <div class="sub-title">Action Server (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">fib_server.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import time, rclpy
+from rclpy.node import Node
+from rclpy.action import ActionServer, CancelResponse, GoalResponse
+from example_interfaces.action import Fibonacci
+
+class FibonacciActionServer(Node):
+    def __init__(self):
+        super().__init__('fibonacci_server')
+        self._server = ActionServer(
+            self,
+            Fibonacci,
+            'fibonacci',
+            execute_callback=self.execute_cb,
+            goal_callback=self.goal_cb,        # optional: accept/reject goal
+            cancel_callback=self.cancel_cb,    # optional: accept/reject cancel
+        )
+        self.get_logger().info('Action server ready')
+
+    def goal_cb(self, goal_request):
+        self.get_logger().info(f'Received goal: order={goal_request.order}')
+        return GoalResponse.ACCEPT  # or REJECT
+
+    def cancel_cb(self, goal_handle):
+        self.get_logger().info('Received cancel request')
+        return CancelResponse.ACCEPT
+
+    def execute_cb(self, goal_handle):
+        self.get_logger().info('Executing goal...')
+        feedback_msg = Fibonacci.Feedback()
+        feedback_msg.partial_sequence = [0, 1]
+
+        for i in range(1, goal_handle.request.order):
+            if goal_handle.is_cancel_requested:
+                goal_handle.canceled()
+                return Fibonacci.Result()
+
+            feedback_msg.partial_sequence.append(
+                feedback_msg.partial_sequence[-1] + feedback_msg.partial_sequence[-2])
+
+            goal_handle.publish_feedback(feedback_msg)  # send progress
+            time.sleep(0.5)
+
+        goal_handle.succeed()
+        result = Fibonacci.Result()
+        result.sequence = feedback_msg.partial_sequence
+        return result
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = FibonacciActionServer()
+    rclpy.spin(node)
+    rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Action Client (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">fib_client.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from rclpy.action import ActionClient
+from example_interfaces.action import Fibonacci
+
+class FibonacciClient(Node):
+    def __init__(self):
+        super().__init__('fibonacci_client')
+        self._client = ActionClient(self, Fibonacci, 'fibonacci')
+
+    def send_goal(self, order):
+        self._client.wait_for_server()
+        goal = Fibonacci.Goal()
+        goal.order = order
+
+        self.get_logger().info(f'Sending goal: order={order}')
+        self._send_goal_future = self._client.send_goal_async(
+            goal,
+            feedback_callback=self.feedback_cb)
+        self._send_goal_future.add_done_callback(self.goal_response_cb)
+
+    def goal_response_cb(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().error('Goal rejected!')
+            return
+        self.get_logger().info('Goal accepted!')
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_cb)
+
+    def feedback_cb(self, feedback_msg):
+        seq = feedback_msg.feedback.partial_sequence
+        self.get_logger().info(f'Feedback: {seq}')
+
+    def get_result_cb(self, future):
+        result = future.result().result
+        self.get_logger().info(f'Result: {result.sequence}')
+        rclpy.shutdown()
+
+def main(args=None):
+    rclpy.init(args=args)
+    client = FibonacciClient()
+    client.send_goal(10)
+    rclpy.spin(client)</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Action CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">ros2 action list                           # list active action servers
+ros2 action list -t                        # with types
+ros2 action info /fibonacci                # info about action server
+ros2 action send_goal /fibonacci example_interfaces/action/Fibonacci "{order: 10}"
+ros2 action send_goal /fibonacci example_interfaces/action/Fibonacci "{order: 10}" --feedback</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     6. CUSTOM INTERFACES ★ (Most Detailed)
+═══════════════════════════════════════════ -->
+<section id="interfaces">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(251,146,60,.12)">🏗️</div>
+  <div class="sec-title" style="color:var(--orange)">Custom Interfaces — Step by Step</div>
+  <span class="sec-tag" style="color:var(--orange);border-color:rgba(251,146,60,.35)">★ Key Topic</span>
+</div>
+
+<div class="box warn"><div class="box-lbl">⚠️ Important Rule</div>Interface packages must use <code class="il">ament_cmake</code> as build type, even if everything else in your project is Python. Never use <code class="il">ament_python</code> for interface packages.</div>
+
+<div class="steps">
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">1</div>
+    <div class="step-body">
+      <div class="step-title">Create the interface package</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">cd ~/ros2_ws/src
+
+# Always ament_cmake for interface packages!
+ros2 pkg create my_interfaces --build-type ament_cmake
+
+# Create subdirectories for each interface type
+mkdir -p my_interfaces/msg
+mkdir -p my_interfaces/srv
+mkdir -p my_interfaces/action</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">2</div>
+    <div class="step-body">
+      <div class="step-title">Write a .msg file (custom message)</div>
+      <div class="box tip"><div class="box-lbl">📝 .msg Syntax</div>One field per line: <code class="il">type field_name</code>. Optionally add default values with <code class="il">= value</code>. Use standard primitive types and other ROS msg types.</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">text</span><div class="cb-right"><span class="cb-file">msg/Robot.msg</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code># Primitive types: bool int8 int16 int32 int64 uint8 uint16 uint32 uint64 float32 float64 string byte char
+# Array: type[] field_name    Fixed array: type[N] field_name
+
+string robot_name
+int32  robot_id
+float64 battery_level       # 0.0 to 100.0
+bool is_active
+
+# Nested message types (fully qualified)
+geometry_msgs/Pose current_pose
+std_msgs/Header header
+
+# Constants (ALL_CAPS by convention)
+int32 STATUS_IDLE = 0
+int32 STATUS_MOVING = 1
+int32 STATUS_ERROR = 2
+
+# Arrays
+float64[] sensor_readings
+string[] joint_names
+float64[6] joint_angles    # fixed-size array of 6</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">3</div>
+    <div class="step-body">
+      <div class="step-title">Write a .srv file (custom service)</div>
+      <div class="box tip"><div class="box-lbl">📝 .srv Syntax</div>Three dashes <code class="il">---</code> separate the request (top) from the response (bottom).</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">text</span><div class="cb-right"><span class="cb-file">srv/SetVelocity.srv</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code># REQUEST
+string robot_name
+float64 linear_velocity
+float64 angular_velocity
+---
+# RESPONSE
+bool success
+string message
+float64 actual_velocity</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">4</div>
+    <div class="step-body">
+      <div class="step-title">Write a .action file (custom action)</div>
+      <div class="box tip"><div class="box-lbl">📝 .action Syntax</div>Three sections separated by <code class="il">---</code>: Goal | Result | Feedback</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">text</span><div class="cb-right"><span class="cb-file">action/Navigate.action</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code># GOAL — what the client sends
+geometry_msgs/Pose target_pose
+float64 max_speed
+---
+# RESULT — sent once when done
+bool success
+float64 total_distance
+string message
+---
+# FEEDBACK — sent periodically during execution
+geometry_msgs/Pose current_pose
+float64 distance_remaining
+float64 estimated_time_remaining</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">5</div>
+    <div class="step-body">
+      <div class="step-title">Edit CMakeLists.txt</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cmake</span><div class="cb-right"><span class="cb-file">CMakeLists.txt</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cmake">cmake_minimum_required(VERSION 3.8)
+project(my_interfaces)
+
+find_package(ament_cmake REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)          # for Header in Robot.msg
+find_package(geometry_msgs REQUIRED)    # for Pose
+
+# List EVERY interface file you created
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Robot.msg"
+  "srv/SetVelocity.srv"
+  "action/Navigate.action"
+  DEPENDENCIES std_msgs geometry_msgs   # packages your interfaces depend on
+)
+
+ament_export_dependencies(rosidl_default_runtime)
+ament_package()</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">6</div>
+    <div class="step-body">
+      <div class="step-title">Edit package.xml</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">xml</span><div class="cb-right"><span class="cb-file">package.xml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-xml">&lt;?xml version="1.0"?&gt;
+&lt;package format="3"&gt;
+  &lt;name&gt;my_interfaces&lt;/name&gt;
+  &lt;version&gt;0.0.1&lt;/version&gt;
+  &lt;description&gt;Custom ROS 2 interfaces&lt;/description&gt;
+  &lt;maintainer email="you@example.com"&gt;Your Name&lt;/maintainer&gt;
+  &lt;license&gt;Apache-2.0&lt;/license&gt;
+
+  &lt;!-- REQUIRED for interface packages --&gt;
+  &lt;buildtool_depend&gt;ament_cmake&lt;/buildtool_depend&gt;
+  &lt;buildtool_depend&gt;rosidl_default_generators&lt;/buildtool_depend&gt;
+
+  &lt;!-- Runtime dependency --&gt;
+  &lt;exec_depend&gt;rosidl_default_runtime&lt;/exec_depend&gt;
+
+  &lt;!-- REQUIRED group membership --&gt;
+  &lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;
+
+  &lt;!-- Packages used in your .msg/.srv/.action files --&gt;
+  &lt;depend&gt;std_msgs&lt;/depend&gt;
+  &lt;depend&gt;geometry_msgs&lt;/depend&gt;
+
+  &lt;export&gt;
+    &lt;build_type&gt;ament_cmake&lt;/build_type&gt;
+  &lt;/export&gt;
+&lt;/package&gt;</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">7</div>
+    <div class="step-body">
+      <div class="step-title">Build &amp; Verify</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Build ONLY the interface package first
+cd ~/ros2_ws
+colcon build --packages-select my_interfaces
+source install/setup.bash
+
+# Verify interfaces are available
+ros2 interface list | grep my_interfaces
+ros2 interface show my_interfaces/msg/Robot
+ros2 interface show my_interfaces/srv/SetVelocity
+ros2 interface show my_interfaces/action/Navigate</code></pre></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">8</div>
+    <div class="step-body">
+      <div class="step-title">Use custom interfaces in your Python node</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">my_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from my_interfaces.msg import Robot
+from my_interfaces.srv import SetVelocity
+from my_interfaces.action import Navigate
+
+class MyRobotNode(Node):
+    def __init__(self):
+        super().__init__('my_robot_node')
+
+        # Publisher using custom msg
+        self.pub = self.create_publisher(Robot, '/robot_status', 10)
+
+        # Service server using custom srv
+        self.srv = self.create_service(
+            SetVelocity, 'set_velocity', self.set_velocity_cb)
+
+        self.timer = self.create_timer(1.0, self.publish_status)
+
+    def publish_status(self):
+        msg = Robot()
+        msg.robot_name = 'R2D2'
+        msg.robot_id = 1
+        msg.battery_level = 87.5
+        msg.is_active = True
+        msg.joint_angles = [0.0, 0.5, 1.2, -0.3, 0.8, 0.0]
+        self.pub.publish(msg)
+
+    def set_velocity_cb(self, request, response):
+        self.get_logger().info(
+            f'Setting velocity: linear={request.linear_velocity}')
+        response.success = True
+        response.message = 'Velocity set successfully'
+        response.actual_velocity = request.linear_velocity
+        return response</code></pre></div>
+      <div class="box tip"><div class="box-lbl">📌 Add dependency</div>In your node's <code class="il">package.xml</code>, add: <code class="il">&lt;depend&gt;my_interfaces&lt;/depend&gt;</code></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n" style="background:rgba(251,146,60,.2);color:var(--orange)">9</div>
+    <div class="step-body">
+      <div class="step-title">Use custom interfaces in your C++ node</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><span class="cb-file">my_node.cpp</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">// Header naming: package/msg/TypeName → my_interfaces/msg/robot.hpp (snake_case!)
+#include "my_interfaces/msg/robot.hpp"
+#include "my_interfaces/srv/set_velocity.hpp"
+#include "my_interfaces/action/navigate.hpp"
+
+// In CMakeLists.txt, add: find_package(my_interfaces REQUIRED)
+// and: ament_target_dependencies(my_node my_interfaces)
+
+// Publishing
+auto msg = my_interfaces::msg::Robot();
+msg.robot_name = "R2D2";
+msg.battery_level = 87.5;
+pub_->publish(msg);</code></pre></div>
+      <div class="box warn"><div class="box-lbl">⚠️ C++ Header Naming</div>CamelCase type → snake_case header. <code class="il">MyRobot</code> → <code class="il">#include "my_interfaces/msg/my_robot.hpp"</code></div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     7. PARAMETERS
+═══════════════════════════════════════════ -->
+<section id="params">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(251,191,36,.12)">⚙️</div>
+  <div class="sec-title" style="color:var(--yellow)">Parameters</div>
+  <span class="sec-tag" style="color:var(--yellow);border-color:rgba(251,191,36,.35)">Config</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ Parameters</div>Node configuration values that can be set at startup or changed at runtime. Must be declared before use. Supports: bool, int, float, string, and arrays of each.</div>
+
+<div class="sub">
+  <div class="sub-title">Declaring &amp; Using Parameters (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">param_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from rcl_interfaces.msg import ParameterDescriptor
+
+class ParamNode(Node):
+    def __init__(self):
+        super().__init__('param_node')
+
+        # Basic declare with default value
+        self.declare_parameter('robot_name', 'my_robot')
+        self.declare_parameter('max_speed', 1.5)
+        self.declare_parameter('debug_mode', False)
+        self.declare_parameter('waypoints', [0.0, 1.0, 2.0])
+
+        # Declare with description (documentation)
+        desc = ParameterDescriptor(description='Maximum linear velocity in m/s')
+        self.declare_parameter('velocity_limit', 2.0, desc)
+
+        # Read parameter values
+        name      = self.get_parameter('robot_name').get_parameter_value().string_value
+        speed     = self.get_parameter('max_speed').get_parameter_value().double_value
+        debug     = self.get_parameter('debug_mode').get_parameter_value().bool_value
+        wpts      = self.get_parameter('waypoints').get_parameter_value().double_array_value
+
+        self.get_logger().info(f'Robot: {name}, Max speed: {speed}, Debug: {debug}')
+
+        # Shortcut helper (returns the Python value directly)
+        name2 = self.get_parameter('robot_name').value   # same as above
+
+        # Register a callback for live parameter updates
+        self.add_on_set_parameters_callback(self.param_callback)
+
+    def param_callback(self, params):
+        from rcl_interfaces.msg import SetParametersResult
+        for p in params:
+            self.get_logger().info(f'Parameter changed: {p.name} = {p.value}')
+            if p.name == 'max_speed' and p.value < 0:
+                return SetParametersResult(successful=False, reason='Speed must be positive')
+        return SetParametersResult(successful=True)</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Declaring Parameters (C++)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cpp</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-cpp">// In constructor
+declare_parameter("robot_name", "my_robot");
+declare_parameter("max_speed", 1.5);
+declare_parameter("debug_mode", false);
+
+// Read values
+std::string name = get_parameter("robot_name").as_string();
+double speed     = get_parameter("max_speed").as_double();
+bool debug       = get_parameter("debug_mode").as_bool();
+
+// Callback for live updates
+auto cb = [this](const std::vector&lt;rclcpp::Parameter&gt; &params) {
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+    for (auto &p : params)
+        RCLCPP_INFO(get_logger(), "Changed: %s", p.get_name().c_str());
+    return result;
+};
+add_on_set_parameters_callback(cb);</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">YAML Parameter File</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">yaml</span><div class="cb-right"><span class="cb-file">config/params.yaml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-yaml"># Structure: /node_name/ros__parameters/param_name
+my_node:
+  ros__parameters:
+    robot_name: "R2D2"
+    max_speed: 2.5
+    debug_mode: false
+    waypoints: [0.0, 1.0, 2.5, 3.0]
+    pid_gains:
+      kp: 1.2
+      ki: 0.01
+      kd: 0.5
+
+# Use wildcard /** to match any node
+/**:
+  ros__parameters:
+    global_param: "shared_value"</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Parameter CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># List all parameters of a node
+ros2 param list /my_node
+
+# Get a parameter value
+ros2 param get /my_node robot_name
+
+# Set a parameter at runtime
+ros2 param set /my_node max_speed 3.0
+ros2 param set /my_node debug_mode true
+
+# Dump all parameters to stdout (YAML format)
+ros2 param dump /my_node
+
+# Load parameters from file
+ros2 param load /my_node config/params.yaml
+
+# Pass params at launch time
+ros2 run my_pkg my_node --ros-args -p robot_name:=R2D2 -p max_speed:=2.5
+ros2 run my_pkg my_node --ros-args --params-file config/params.yaml</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     8. LAUNCH FILES
+═══════════════════════════════════════════ -->
+<section id="launch">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(45,212,191,.12)">🚦</div>
+  <div class="sec-title" style="color:var(--teal)">Launch Files</div>
+  <span class="sec-tag" style="color:var(--teal);border-color:rgba(45,212,191,.35)">Orchestration</span>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Basic Python Launch File</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">launch/my_system.launch.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import ExecuteProcess, LogInfo
+import os
+from ament_index_python.packages import get_package_share_directory
+
+def generate_launch_description():
+    pkg_dir = get_package_share_directory('my_py_pkg')
+    config = os.path.join(pkg_dir, 'config', 'params.yaml')
+
+    return LaunchDescription([
+        # Simple node
+        Node(
+            package='my_py_pkg',
+            executable='my_node',
+            name='my_node',            # override node name
+            output='screen',           # print output to terminal
+        ),
+
+        # Node with parameters
+        Node(
+            package='my_py_pkg',
+            executable='robot_node',
+            name='robot',
+            namespace='robot1',        # sets namespace /robot1/topic
+            parameters=[
+                config,                # from YAML file
+                {'max_speed': 2.5},    # inline overrides
+                {'debug_mode': True},
+            ],
+            remappings=[               # remap topic names
+                ('/cmd_vel', '/robot1/cmd_vel'),
+                ('/scan', '/robot1/scan'),
+            ],
+        ),
+
+        # Run a shell command
+        ExecuteProcess(
+            cmd=['rviz2', '-d', os.path.join(pkg_dir, 'rviz', 'config.rviz')],
+            output='screen',
+        ),
+
+        LogInfo(msg='All nodes started!'),
+    ])</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Launch with Arguments (Configurable at Runtime)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">launch/with_args.launch.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    # Declare arguments with defaults
+    use_sim_arg = DeclareLaunchArgument(
+        'use_sim_time', default_value='false',
+        description='Use simulation clock')
+    robot_arg = DeclareLaunchArgument(
+        'robot_name', default_value='my_robot')
+
+    return LaunchDescription([
+        use_sim_arg,
+        robot_arg,
+
+        Node(
+            package='my_py_pkg',
+            executable='my_node',
+            parameters=[{
+                'use_sim_time': LaunchConfiguration('use_sim_time'),
+                'robot_name': LaunchConfiguration('robot_name'),
+            }]
+        ),
+    ])</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Include Other Launch Files</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+
+slam_pkg = get_package_share_directory('slam_toolbox')
+
+IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+        os.path.join(slam_pkg, 'launch', 'online_sync_launch.py')),
+    launch_arguments={
+        'use_sim_time': 'true',
+        'slam_params_file': my_slam_config,
+    }.items(),
+)</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Install Launch Files (CMake &amp; setup.py)</div>
+  <div class="g2">
+    <div>
+      <div class="sub-title" style="font-size:11.5px;margin-bottom:6px">Python package — setup.py</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-python">data_files=[
+    # ...existing entries...
+    ('share/' + package_name + '/launch',
+     glob('launch/*.launch.py')),
+    ('share/' + package_name + '/config',
+     glob('config/*.yaml')),
+],</code></pre></div>
+    </div>
+    <div>
+      <div class="sub-title" style="font-size:11.5px;margin-bottom:6px">C++ package — CMakeLists.txt</div>
+      <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">cmake</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-cmake">install(DIRECTORY
+  launch config rviz
+  DESTINATION share/${PROJECT_NAME}/)</code></pre></div>
+    </div>
+  </div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Launch CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">ros2 launch my_py_pkg my_system.launch.py
+ros2 launch my_py_pkg with_args.launch.py use_sim_time:=true robot_name:=R2D2
+ros2 launch --show-args my_py_pkg with_args.launch.py  # show available args</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     9. TF2
+═══════════════════════════════════════════ -->
+<section id="tf2">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(163,230,53,.12)">🗺️</div>
+  <div class="sec-title" style="color:var(--lime)">TF2 — Transform System</div>
+  <span class="sec-tag" style="color:var(--lime);border-color:rgba(163,230,53,.35)">Advanced</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ TF2</div>TF2 tracks coordinate frames and their relationships over time. Every robot part (base, arm, sensor) has a frame. TF2 lets you transform positions between any frames automatically.</div>
+
+<div class="sub">
+  <div class="sub-title">Static Transform Broadcaster</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from tf2_ros import StaticTransformBroadcaster
+from geometry_msgs.msg import TransformStamped
+import math
+
+class StaticBroadcaster(Node):
+    def __init__(self):
+        super().__init__('static_broadcaster')
+        self.tf_static = StaticTransformBroadcaster(self)
+        self.send_transform()
+
+    def send_transform(self):
+        t = TransformStamped()
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.header.frame_id = 'base_link'      # parent frame
+        t.child_frame_id  = 'camera_link'    # child frame
+
+        # Translation (meters)
+        t.transform.translation.x = 0.1
+        t.transform.translation.y = 0.0
+        t.transform.translation.z = 0.5
+
+        # Rotation as quaternion
+        t.transform.rotation.x = 0.0
+        t.transform.rotation.y = 0.0
+        t.transform.rotation.z = 0.0
+        t.transform.rotation.w = 1.0        # no rotation
+
+        self.tf_static.sendTransform(t)</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Dynamic Transform Broadcaster</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from tf2_ros import TransformBroadcaster
+from tf_transformations import quaternion_from_euler  # pip install transforms3d
+
+class DynamicBroadcaster(Node):
+    def __init__(self):
+        super().__init__('dynamic_broadcaster')
+        self.tf = TransformBroadcaster(self)
+        self.timer = self.create_timer(0.05, self.broadcast)  # 20Hz
+        self.angle = 0.0
+
+    def broadcast(self):
+        t = TransformStamped()
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.header.frame_id = 'world'
+        t.child_frame_id  = 'robot'
+
+        t.transform.translation.x = 1.0
+        t.transform.translation.y = 0.0
+        t.transform.translation.z = 0.0
+
+        # Convert roll, pitch, yaw → quaternion
+        q = quaternion_from_euler(0, 0, self.angle)
+        t.transform.rotation.x = q[0]
+        t.transform.rotation.y = q[1]
+        t.transform.rotation.z = q[2]
+        t.transform.rotation.w = q[3]
+
+        self.tf.sendTransform(t)
+        self.angle += 0.01</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Transform Listener (Look Up Transforms)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from tf2_ros import Buffer, TransformListener, TransformException
+from rclpy.duration import Duration
+
+class TFListener(Node):
+    def __init__(self):
+        super().__init__('tf_listener')
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
+        self.timer = self.create_timer(0.1, self.lookup)
+
+    def lookup(self):
+        try:
+            # Look up transform: where is 'target_frame' relative to 'source_frame'?
+            transform = self.tf_buffer.lookup_transform(
+                'base_link',          # target frame
+                'camera_link',        # source frame
+                rclpy.time.Time(),    # latest available
+                timeout=Duration(seconds=1.0))
+
+            tx = transform.transform.translation.x
+            ty = transform.transform.translation.y
+            tz = transform.transform.translation.z
+            self.get_logger().info(f'Camera at: ({tx:.2f}, {ty:.2f}, {tz:.2f})')
+
+        except TransformException as e:
+            self.get_logger().warn(f'Transform error: {e}')</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">TF2 CLI Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># View all frames in the TF tree
+ros2 run tf2_tools view_frames               # outputs PDF of TF tree
+
+# Echo a specific transform
+ros2 run tf2_ros tf2_echo base_link camera_link
+
+# Static transform without writing a node
+ros2 run tf2_ros static_transform_publisher \
+  --x 0.1 --y 0.0 --z 0.5 \
+  --roll 0.0 --pitch 0.0 --yaw 0.0 \
+  --frame-id base_link --child-frame-id camera_link</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     10. EXECUTORS & CALLBACKS
+═══════════════════════════════════════════ -->
+<section id="executors">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(248,113,113,.12)">⚡</div>
+  <div class="sec-title" style="color:var(--red)">Executors &amp; Callback Groups</div>
+  <span class="sec-tag" style="color:var(--red);border-color:rgba(248,113,113,.35)">Advanced</span>
+</div>
+
+<div class="box warn"><div class="box-lbl">⚠️ By Default</div><code class="il">rclpy.spin(node)</code> uses a <b>SingleThreadedExecutor</b>. Callbacks are queued and run one at a time. A slow callback will block all others. Use MultiThreadedExecutor + callback groups to run callbacks concurrently.</div>
+
+<div class="sub">
+  <div class="sub-title">MultiThreadedExecutor with Callback Groups</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
+from rclpy.callback_groups import ReentrantCallbackGroup, MutuallyExclusiveCallbackGroup
+
+class MyNode(Node):
+    def __init__(self):
+        super().__init__('my_node')
+
+        # ReentrantCallbackGroup: callbacks in this group CAN run concurrently
+        self.reentrant_group = ReentrantCallbackGroup()
+
+        # MutuallyExclusiveCallbackGroup: only ONE callback at a time
+        # (but can run concurrently with other groups)
+        self.exclusive_group = MutuallyExclusiveCallbackGroup()
+
+        # Assign callbacks to groups
+        self.timer1 = self.create_timer(
+            0.1, self.fast_callback,
+            callback_group=self.reentrant_group)
+
+        self.sub = self.create_subscription(
+            String, '/topic', self.slow_callback,
+            10, callback_group=self.exclusive_group)
+
+        self.srv = self.create_service(
+            AddTwoInts, 'add',
+            self.service_callback,
+            callback_group=self.exclusive_group)
+
+    def fast_callback(self):
+        pass  # runs at 10Hz without blocking others
+
+    def slow_callback(self, msg):
+        import time
+        time.sleep(0.5)  # With MultiThreaded, doesn't block fast_callback
+
+    def service_callback(self, req, res):
+        res.sum = req.a + req.b
+        return res
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MyNode()
+
+    # Use multiple threads — pass num_threads or leave for auto
+    executor = MultiThreadedExecutor(num_threads=4)
+    executor.add_node(node)
+
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node.destroy_node()
+        rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Running Multiple Nodes in One Process</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">def main(args=None):
+    rclpy.init(args=args)
+
+    node_a = NodeA()
+    node_b = NodeB()
+    node_c = NodeC()
+
+    executor = MultiThreadedExecutor()
+    executor.add_node(node_a)
+    executor.add_node(node_b)
+    executor.add_node(node_c)
+
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Async/Await Service Client (Non-blocking)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">class AsyncClientNode(Node):
+    def __init__(self):
+        super().__init__('async_client')
+        self.client = self.create_client(AddTwoInts, 'add_two_ints')
+        self.group = ReentrantCallbackGroup()
+        self.timer = self.create_timer(1.0, self.call_service,
+                                        callback_group=self.group)
+
+    async def call_service(self):
+        # Must be in a ReentrantCallbackGroup!
+        if not self.client.service_is_ready():
+            return
+        req = AddTwoInts.Request()
+        req.a, req.b = 5, 3
+        response = await self.client.call_async(req)
+        self.get_logger().info(f'Result: {response.sum}')</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     11. LIFECYCLE NODES
+═══════════════════════════════════════════ -->
+<section id="lifecycle">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(192,132,252,.12)">🔄</div>
+  <div class="sec-title" style="color:var(--violet)">Lifecycle Nodes</div>
+  <span class="sec-tag" style="color:var(--violet);border-color:rgba(192,132,252,.35)">Advanced</span>
+</div>
+
+<div class="box info"><div class="box-lbl">ℹ️ Lifecycle Nodes</div>Managed nodes with explicit states: Unconfigured → Inactive → Active → Finalized. Transitions are triggered externally, enabling deterministic startup/shutdown ordering.</div>
+
+<div class="sub">
+  <div class="sub-title">States &amp; Transitions</div>
+  <div class="tw"><table>
+    <tr><th>State</th><th>Description</th><th>Transition In</th></tr>
+    <tr><td style="color:var(--slate)">Unconfigured</td><td>Initial state after creation</td><td>—</td></tr>
+    <tr><td style="color:var(--yellow)">Inactive</td><td>Configured but not running</td><td><code class="il">configure</code></td></tr>
+    <tr><td style="color:var(--green)">Active</td><td>Running, publishing/subscribing</td><td><code class="il">activate</code></td></tr>
+    <tr><td style="color:var(--red)">Finalized</td><td>Cleaned up, ready to destroy</td><td><code class="il">shutdown</code></td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Creating a Lifecycle Node (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">lifecycle_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">import rclpy
+from rclpy.lifecycle import LifecycleNode, TransitionCallbackReturn, State
+
+class MyLifecycleNode(LifecycleNode):
+    def __init__(self):
+        super().__init__('my_lifecycle_node')
+        self.pub_ = None
+        self.timer_ = None
+
+    # Called when: configure transition is triggered
+    def on_configure(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info('Configuring...')
+        # Setup publishers, subscribers, parameters here
+        # Do NOT start timers or start active work here
+        self.pub_ = self.create_lifecycle_publisher(String, '/data', 10)
+        return TransitionCallbackReturn.SUCCESS  # or FAILURE / ERROR
+
+    # Called when: activate transition is triggered
+    def on_activate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info('Activating...')
+        # Start publishing, begin active work
+        self.timer_ = self.create_timer(1.0, self.publish_data)
+        return super().on_activate(state)  # activates the publisher
+
+    # Called when: deactivate transition is triggered
+    def on_deactivate(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info('Deactivating...')
+        self.timer_.cancel()
+        return super().on_deactivate(state)  # deactivates publisher
+
+    # Called when: cleanup transition is triggered
+    def on_cleanup(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info('Cleaning up...')
+        self.destroy_publisher(self.pub_)
+        self.pub_ = None
+        return TransitionCallbackReturn.SUCCESS
+
+    # Called when: shutdown transition is triggered
+    def on_shutdown(self, state: State) -> TransitionCallbackReturn:
+        self.get_logger().info('Shutting down...')
+        return TransitionCallbackReturn.SUCCESS
+
+    def publish_data(self):
+        if self.pub_ is not None and self.pub_.is_activated:
+            msg = String()
+            msg.data = 'alive'
+            self.pub_.publish(msg)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MyLifecycleNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Managing Lifecycle Nodes (CLI)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># List lifecycle nodes
+ros2 lifecycle nodes
+
+# Get current state
+ros2 lifecycle get /my_lifecycle_node
+
+# Trigger transitions
+ros2 lifecycle set /my_lifecycle_node configure
+ros2 lifecycle set /my_lifecycle_node activate
+ros2 lifecycle set /my_lifecycle_node deactivate
+ros2 lifecycle set /my_lifecycle_node cleanup
+ros2 lifecycle set /my_lifecycle_node shutdown</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     12. QOS & BAG FILES
+═══════════════════════════════════════════ -->
+<section id="qos">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(148,163,184,.12)">📶</div>
+  <div class="sec-title" style="color:var(--slate)">QoS Profiles &amp; Bag Files</div>
+  <span class="sec-tag" style="color:var(--slate);border-color:rgba(148,163,184,.35)">Advanced</span>
+</div>
+
+<div class="sub">
+  <div class="sub-title">QoS Profiles — Quick Reference</div>
+  <div class="tw"><table>
+    <tr><th>Predefined Profile</th><th>Reliability</th><th>Durability</th><th>Use For</th></tr>
+    <tr><td><code class="il">qos_profile_sensor_data</code></td><td>Best Effort</td><td>Volatile</td><td>Sensors, cameras</td></tr>
+    <tr><td><code class="il">qos_profile_system_default</code></td><td>Reliable</td><td>Volatile</td><td>General purpose</td></tr>
+    <tr><td><code class="il">qos_profile_services_default</code></td><td>Reliable</td><td>Volatile</td><td>Services (default)</td></tr>
+    <tr><td><code class="il">qos_profile_parameters</code></td><td>Reliable</td><td>Volatile</td><td>Parameters</td></tr>
+    <tr><td><code class="il">QoSPresetProfiles.TRANSIENT_LOCAL</code></td><td>Reliable</td><td>Transient Local</td><td>Latched topics</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Custom QoS Profile (Python)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">from rclpy.qos import (QoSProfile, QoSReliabilityPolicy,
+                        QoSDurabilityPolicy, QoSHistoryPolicy,
+                        qos_profile_sensor_data)
+
+# Custom profile
+my_qos = QoSProfile(
+    reliability=QoSReliabilityPolicy.RELIABLE,       # or BEST_EFFORT
+    durability=QoSDurabilityPolicy.VOLATILE,         # or TRANSIENT_LOCAL (latched)
+    history=QoSHistoryPolicy.KEEP_LAST,              # or KEEP_ALL
+    depth=10                                          # history depth
+)
+
+# Use in publisher/subscriber
+self.pub = self.create_publisher(String, '/topic', my_qos)
+self.sub = self.create_subscription(String, '/topic', self.cb, qos_profile_sensor_data)
+
+# TRANSIENT_LOCAL = latched: new subscribers get last message immediately
+latched_qos = QoSProfile(
+    durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+    reliability=QoSReliabilityPolicy.RELIABLE,
+    depth=1)</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Bag Files (rosbag2)</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Record all topics
+ros2 bag record -a
+
+# Record specific topics
+ros2 bag record /topic1 /topic2 /topic3
+
+# Record with a name
+ros2 bag record -a -o my_recording
+
+# Record with compression
+ros2 bag record -a --compression-mode file --compression-format zstd
+
+# Play back a bag
+ros2 bag play my_recording
+
+# Play at different speed
+ros2 bag play my_recording --rate 0.5     # half speed
+ros2 bag play my_recording --rate 2.0     # double speed
+
+# Loop playback
+ros2 bag play my_recording --loop
+
+# Play only specific topics
+ros2 bag play my_recording --topics /topic1 /topic2
+
+# Inspect bag contents
+ros2 bag info my_recording
+
+# Convert bag to CSV (using ros2 bag convert)
+ros2 bag play my_recording &amp;&amp; ros2 topic echo /my_topic</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     13. CLI COMMANDS REFERENCE
+═══════════════════════════════════════════ -->
+<section id="cli">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(34,211,238,.12)">💻</div>
+  <div class="sec-title" style="color:var(--cyan)">CLI Commands — Complete Reference</div>
+  <span class="sec-tag" style="color:var(--cyan);border-color:rgba(34,211,238,.35)">Reference</span>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Node Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 node list</code></td><td>List all running nodes</td></tr>
+    <tr><td><code class="il">ros2 node list --include-hidden</code></td><td>Include hidden nodes</td></tr>
+    <tr><td><code class="il">ros2 node info /node_name</code></td><td>Show publishers, subscribers, services, actions</td></tr>
+    <tr><td><code class="il">ros2 run pkg exe --ros-args --remap /from:=/to</code></td><td>Remap a topic name</td></tr>
+    <tr><td><code class="il">ros2 run pkg exe --ros-args --remap __ns:=/my_ns</code></td><td>Set namespace</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Topic Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 topic list</code></td><td>List all topics</td></tr>
+    <tr><td><code class="il">ros2 topic list -t</code></td><td>List with message types</td></tr>
+    <tr><td><code class="il">ros2 topic echo /topic</code></td><td>Print messages</td></tr>
+    <tr><td><code class="il">ros2 topic echo /topic --once</code></td><td>Print just one message</td></tr>
+    <tr><td><code class="il">ros2 topic echo /topic --field data</code></td><td>Print specific field only</td></tr>
+    <tr><td><code class="il">ros2 topic info /topic -v</code></td><td>Detailed info including QoS</td></tr>
+    <tr><td><code class="il">ros2 topic hz /topic</code></td><td>Measure publish rate</td></tr>
+    <tr><td><code class="il">ros2 topic bw /topic</code></td><td>Measure bandwidth</td></tr>
+    <tr><td><code class="il">ros2 topic delay /topic</code></td><td>Measure message delay</td></tr>
+    <tr><td><code class="il">ros2 topic pub /topic type "yaml"</code></td><td>Publish a message manually</td></tr>
+    <tr><td><code class="il">ros2 topic pub -r 5 /topic type "yaml"</code></td><td>Publish at 5Hz continuously</td></tr>
+    <tr><td><code class="il">ros2 topic pub -1 /topic type "yaml"</code></td><td>Publish exactly once</td></tr>
+    <tr><td><code class="il">ros2 topic find std_msgs/msg/String</code></td><td>Find topics by type</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Service Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 service list</code></td><td>List all services</td></tr>
+    <tr><td><code class="il">ros2 service list -t</code></td><td>List with types</td></tr>
+    <tr><td><code class="il">ros2 service type /srv</code></td><td>Get service type</td></tr>
+    <tr><td><code class="il">ros2 service find example_interfaces/srv/AddTwoInts</code></td><td>Find services of a type</td></tr>
+    <tr><td><code class="il">ros2 service call /srv type "{yaml}"</code></td><td>Call a service</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Interface (Message/Service/Action) Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 interface list</code></td><td>List all interfaces</td></tr>
+    <tr><td><code class="il">ros2 interface list --only-msgs</code></td><td>Only message types</td></tr>
+    <tr><td><code class="il">ros2 interface show std_msgs/msg/String</code></td><td>Show interface definition</td></tr>
+    <tr><td><code class="il">ros2 interface package std_msgs</code></td><td>List interfaces in a package</td></tr>
+    <tr><td><code class="il">ros2 interface packages</code></td><td>List all interface packages</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Package Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 pkg list</code></td><td>List all installed packages</td></tr>
+    <tr><td><code class="il">ros2 pkg executables my_pkg</code></td><td>List executables in package</td></tr>
+    <tr><td><code class="il">ros2 pkg prefix my_pkg</code></td><td>Get package install path</td></tr>
+    <tr><td><code class="il">ros2 pkg xml my_pkg</code></td><td>Print package.xml</td></tr>
+    <tr><td><code class="il">ros2 pkg create ...</code></td><td>Create a new package</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Parameter Commands</div>
+  <div class="tw"><table>
+    <tr><th>Command</th><th>Description</th></tr>
+    <tr><td><code class="il">ros2 param list</code></td><td>List parameters for all nodes</td></tr>
+    <tr><td><code class="il">ros2 param list /node</code></td><td>List parameters for one node</td></tr>
+    <tr><td><code class="il">ros2 param get /node param</code></td><td>Get a parameter value</td></tr>
+    <tr><td><code class="il">ros2 param set /node param value</code></td><td>Set a parameter</td></tr>
+    <tr><td><code class="il">ros2 param dump /node</code></td><td>Dump all params as YAML</td></tr>
+    <tr><td><code class="il">ros2 param load /node file.yaml</code></td><td>Load params from YAML</td></tr>
+    <tr><td><code class="il">ros2 param delete /node param</code></td><td>Delete a parameter</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Colcon Build Commands</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash">colcon build                                      # build all
+colcon build --symlink-install                    # symlinks for Python dev
+colcon build --packages-select pkg1 pkg2          # build specific packages
+colcon build --packages-up-to my_pkg             # build pkg + all dependencies
+colcon build --packages-skip test_pkg            # build all except
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release  # release build
+colcon test --packages-select my_pkg             # run tests
+colcon test-result                               # show test results</code></pre></div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     14. DEBUGGING & TOOLS
+═══════════════════════════════════════════ -->
+<section id="debug">
+<div class="sec-hd">
+  <div class="sec-ic" style="background:rgba(245,158,11,.12)">🔍</div>
+  <div class="sec-title" style="color:var(--amber)">Debugging &amp; Tools</div>
+  <span class="sec-tag" style="color:var(--amber);border-color:rgba(245,158,11,.35)">Reference</span>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Logging Levels</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python"># Logging (inside a Node)
+self.get_logger().debug('Verbose debug info')     # hidden by default
+self.get_logger().info('Normal status message')
+self.get_logger().warn('Something unexpected')
+self.get_logger().error('Something failed')
+self.get_logger().fatal('Unrecoverable error')
+
+# Throttled logging (avoid spam) — log at most once per 2 seconds
+self.get_logger().info_throttle(self, 2.0, 'Only prints every 2s')
+
+# Set log level at runtime
+ros2 run demo_nodes_py listener --ros-args --log-level DEBUG
+ros2 service call /my_node/set_logger_level rcl_interfaces/srv/SetLoggerLevel \
+  "{logger_name: 'my_node', level: 10}"  # 10=DEBUG, 20=INFO, 30=WARN, 40=ERROR</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">rqt GUI Tools</div>
+  <div class="tw"><table>
+    <tr><th>Tool</th><th>Command</th><th>What it does</th></tr>
+    <tr><td>rqt (main GUI)</td><td><code class="il">rqt</code></td><td>Launch rqt with all plugins</td></tr>
+    <tr><td>Node graph</td><td><code class="il">rqt_graph</code></td><td>Visualize nodes, topics, connections</td></tr>
+    <tr><td>Topic monitor</td><td><code class="il">rqt_topic</code></td><td>Monitor topic values in real-time</td></tr>
+    <tr><td>Console (logs)</td><td><code class="il">rqt_console</code></td><td>View/filter all log messages</td></tr>
+    <tr><td>Plot</td><td><code class="il">rqt_plot</code></td><td>Plot numeric topic values over time</td></tr>
+    <tr><td>TF tree</td><td><code class="il">ros2 run rqt_tf_tree rqt_tf_tree</code></td><td>Visualize TF frame tree</td></tr>
+    <tr><td>Service caller</td><td><code class="il">rqt_service_caller</code></td><td>Call services via GUI</td></tr>
+    <tr><td>RViz2</td><td><code class="il">rviz2</code></td><td>3D visualization (sensors, TF, maps)</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Common Errors &amp; Fixes</div>
+  <div class="tw"><table>
+    <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+    <tr><td><code class="il">No executable found</code></td><td>Entry point not registered or not built</td><td>Check setup.py entry_points, rebuild</td></tr>
+    <tr><td><code class="il">No module named 'my_interfaces'</code></td><td>Interface package not built/sourced</td><td><code class="il">colcon build --packages-select my_interfaces && source install/setup.bash</code></td></tr>
+    <tr><td><code class="il">Service call failed</code></td><td>Service not running or wrong type</td><td>Check <code class="il">ros2 service list</code></td></tr>
+    <tr><td><code class="il">QoS incompatible</code></td><td>Pub/sub have mismatched QoS</td><td>Match reliability and durability settings</td></tr>
+    <tr><td><code class="il">TF lookup failed</code></td><td>Frame not published or old</td><td>Check <code class="il">ros2 run tf2_tools view_frames</code></td></tr>
+    <tr><td><code class="il">callback blocking spin</code></td><td>Slow callback in single-thread executor</td><td>Use MultiThreadedExecutor + ReentrantCallbackGroup</td></tr>
+    <tr><td><code class="il">rosidl_generate_interfaces failed</code></td><td>Missing dependency in CMakeLists</td><td>Add <code class="il">DEPENDENCIES pkg_name</code> to rosidl_generate_interfaces</td></tr>
+    <tr><td><code class="il">Invalid interface package</code></td><td>Using ament_python for interfaces</td><td>Always use <code class="il">ament_cmake</code> for interface packages</td></tr>
+  </table></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">System Health Check</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Full system diagnostics
+ros2 doctor
+
+# Check for communication issues
+ros2 doctor --report
+
+# Verify all nodes are reachable
+ros2 node list
+
+# Check which nodes publish to a topic (and verify QoS match)
+ros2 topic info /my_topic -v
+
+# Inspect the TF tree for broken chains
+ros2 run tf2_tools view_frames
+evince frames.pdf                  # on Linux
+
+# Find node that's consuming high CPU
+top -b -n 1 | grep ros2</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Package Dependency Checker</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-bash"># Install missing dependencies
+rosdep install --from-paths src --ignore-src -r -y
+
+# Check what a package depends on
+ros2 pkg xml my_pkg | grep depend
+
+# Verify build environment
+colcon build --symlink-install 2>&1 | grep -i error</code></pre></div>
+</div>
+
+<div class="sub">
+  <div class="sub-title">Pattern: Minimal Working Node Template</div>
+  <div class="cb"><div class="cb-hd"><div class="cb-dots"><div class="cb-dot" style="background:#ff5f56"></div><div class="cb-dot" style="background:#ffbd2e"></div><div class="cb-dot" style="background:#27c93f"></div></div><span class="cb-lang">python</span><div class="cb-right"><span class="cb-file">template_node.py</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div><pre><code class="language-python">#!/usr/bin/env python3
+"""Template: copy this as starting point for any new node."""
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class TemplateNode(Node):
+    def __init__(self):
+        super().__init__('template_node')
+
+        # Parameters
+        self.declare_parameter('my_param', 'default_value')
+        self.my_param = self.get_parameter('my_param').value
+
+        # Publisher
+        self.publisher = self.create_publisher(String, '/output', 10)
+
+        # Subscriber
+        self.subscription = self.create_subscription(
+            String, '/input', self.input_callback, 10)
+
+        # Timer
+        self.timer = self.create_timer(1.0, self.timer_callback)
+
+        self.get_logger().info(f'Node started with param: {self.my_param}')
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = 'Hello from template!'
+        self.publisher.publish(msg)
+
+    def input_callback(self, msg: String):
+        self.get_logger().info(f'Received: {msg.data}')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = TemplateNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+</div>
+</section>
+
+</main>
+
+<script>
+hljs.highlightAll();
+
+// Copy button
+function copyCode(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1800);
+  });
+}
+
+// Tab switching
+function switchTab(btn, targetId) {
+  const wrap = btn.closest('.tabs-wrap');
+  wrap.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  wrap.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(targetId).classList.add('on');
+}
+
+// Scroll spy for sidebar
+const navLinks = document.querySelectorAll('.nav-a');
+const sections = document.querySelectorAll('section[id]');
+function updateNav() {
+  const scrollY = window.scrollY + 60;
+  let current = '';
+  sections.forEach(sec => { if (sec.offsetTop <= scrollY) current = sec.id; });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+  document.getElementById('stpBtn').classList.toggle('vis', window.scrollY > 300);
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
+
+// Search/filter nav
+function filterNav(q) {
+  const query = q.toLowerCase();
+  navLinks.forEach(a => {
+    const match = a.textContent.toLowerCase().includes(query);
+    a.style.display = match ? '' : 'none';
+  });
+  document.querySelectorAll('.nav-lbl').forEach(lbl => {
+    lbl.style.display = query ? 'none' : '';
+  });
+}
+</script>
+</body>
+</html>
